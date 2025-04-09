@@ -2,7 +2,7 @@ from pypylon import pylon
 import matplotlib.pyplot as plt
 import config.CaptureConfig as CaptureConfig
 
-class AcquisitionInterface:
+class GlobalAcquisition:
     def __init__(self, captureConfig=CaptureConfig.CaptureConfig()):
         self.camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
         self.camera.Open()
@@ -10,7 +10,8 @@ class AcquisitionInterface:
         self.captureConfig = captureConfig
     
     def start_acquistion(self):
-        self.camera.AcquisitionStart.Execute()
+        print("Using device ", self.camera.GetDeviceInfo().GetModelName())
+        # self.camera.AcquisitionStart.Execute()
 
     def stop_acquisition(self):
         self.camera.AcquisitionStop.Execute()
