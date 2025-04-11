@@ -1,8 +1,8 @@
 from pypylon import pylon
 import config.CaptureConfig as CaptureConfig
-from AcquisitionInterface import GlobalAcquisition
+from acquisition.GlobalAcquisition import GlobalAcquisition
 
-class FreeRunAcquisitionInterface(GlobalAcquisition):
+class FreeRunAcquisition(GlobalAcquisition):
     def __init__(self, captureConfig=CaptureConfig.CaptureConfig()):
         super.__init__()
         self.camera.AcquisitionMode.Value = "Continuous"

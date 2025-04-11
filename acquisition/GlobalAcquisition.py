@@ -11,7 +11,29 @@ class GlobalAcquisition:
     
     def start_acquistion(self):
         print("Using device ", self.camera.GetDeviceInfo().GetModelName())
-        # self.camera.AcquisitionStart.Execute()
+        if self.captureConfig.maxFrames != None:
+            self.camera.StartGrabbingMax(self.captureConfig.maxFrames)
+        else:
+            self.camera.StartGrabbing(pylon.GrabStrategy_OneByOne)
+        self.acquire()
+
+    def acquire(self):
+        if self.camera.GetGrabResultWaitObject().Wait(0):
+            print("Grab results wait in the output queue.")
+
+        # All triggered images are still waiting in the output queue
+        # and are now retrieved.
+        # The grabbing continues in the background, e.g. when using hardware trigger mode,
+        # as long as the grab engine does not run out of buffers.
+        buffersInQueue = 0
+        while self.camera.RetrieveResult(0, pylon.TimeoutHandling_Return):
+            buffersInQueue += 1
+
+        print("Retrieved ", buffersInQueue, " grab results from output queue.")
+
+        # Stop the grabbing.
+        self.camera.StopGrabbing()
+            # self.camera.AcquisitionStart.Execute()
 
     def stop_acquisition(self):
         self.camera.AcquisitionStop.Execute()
